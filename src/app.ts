@@ -5,11 +5,13 @@ import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
 // 更多信息见文档：https://next.umijs.org/docs/api/runtime-config#getinitialstate
 export async function getInitialState(): Promise<{
   name: string;
-  currentUser: any;
+  currentUser: CurrentUser;
   loading?: boolean;
-  fetchUser?: () => Promise<any | undefined>;
+  fetchUser?: () => Promise<CurrentUser | undefined>;
 }> {
-  const fetchUser = async () => {};
+  const fetchUser = async () => {
+    return undefined;
+  };
   return { name: '@umijs/max', currentUser: {}, fetchUser };
 }
 
@@ -33,13 +35,17 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     menu: {
       locale: false,
     },
-    onPageChange: (location) => {
-      console.log(location);
-    },
+    // onPageChange: (location) => {
+    //   console.log(location);
+    // },
   };
 };
 
-export const request: RequestConfig = {};
+export const request: RequestConfig = {
+  errorConfig: {},
+  requestInterceptors: [],
+  responseInterceptors: [],
+};
 
 // const codeMessage: { [key: number]: string } = {
 //   200: '服务器成功返回请求的数据。',

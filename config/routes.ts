@@ -1,27 +1,24 @@
 export default [
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/console',
   },
   {
+    icon: 'home',
     name: '首页',
-    path: '/home',
+    path: '/console',
     component: './Home',
   },
   {
-    name: '权限演示2',
-    path: '/access',
-    component: './Access',
-  },
-  {
-    name: 'test',
-    path: '/t',
+    name: '系统管理',
+    icon: 'home',
+    path: '/sys',
     routes: [
       {
-        name: ' CRUD 示例',
-        path: '/t/table',
-        icon: 'codeSandbox',
-        component: './Access',
+        name: '用户管理',
+        icon: 'home',
+        path: '/sys/user',
+        component: './User',
       },
     ],
   },
