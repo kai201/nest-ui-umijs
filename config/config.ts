@@ -10,7 +10,7 @@ export default defineConfig({
   access: {},
   model: {},
   initialState: {},
-  request: {},
+  request: { dataField: 'data' as any },
   layout: {
     title: '运管',
     pwa: false,

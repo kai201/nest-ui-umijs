@@ -11,3 +11,9 @@ type CurrentUser = {
   token?: string;
   permissions?: [];
 };
+
+type R<T = any> = {
+  success: boolean;
+  message: string;
+  data?: T | undefined;
+};

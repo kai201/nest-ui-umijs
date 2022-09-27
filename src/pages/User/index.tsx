@@ -19,7 +19,7 @@ const UserView: React.FC = () => {
   const intl = useIntl();
   const [editVisible, setEditVisible] = useState(false);
 
-  const columns: ProColumns[] = [
+  const columns: ProColumns<services.SysUser>[] = [
     { title: intl.getMessage('user.label.table_0', '用户名称'), dataIndex: 'x', ellipsis: true, width: 200 },
     {
       title: intl.getMessage('user.label.table_1', '用户昵称'),
@@ -53,25 +53,36 @@ const UserView: React.FC = () => {
     <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setEditVisible(true)}>
       {intl.getMessage('btn.add', '新增')}
     </Button>,
+    <Button key="button1" icon={<PlusOutlined />} type="primary" onClick={() => services.list({})}>
+      {intl.getMessage('btn.test', 'Test')}
+    </Button>,
   ];
 
   const btnSubmitClick = async (data: any) => {
     console.log(data);
     return true;
   };
+  const handleFetch = async (params: any, sort: any, filter: any) => {
+    const { data, success } = await services.list(params);
+    console.log('sort -------->', sort);
+    console.log('filter ------>', filter);
+    console.log('params ------>', params);
+    console.log('data ------>', data);
+    return { data, success };
+  };
 
-  useEffect(() => {
-    services.list({});
-  });
+  useEffect(() => {});
+
   return (
     <PageContainer>
       <ProTable
         size="small"
         columns={columns}
+        request={handleFetch}
         form={{ syncToUrl: true, syncToInitialValues: false }}
         toolBarRender={actions}
       />
-      <ModalForm
+      <ModalForm<services.CreateUser>
         title={intl.getMessage('user.modal.add.title', '新增')}
         size="small"
         open={editVisible}
@@ -79,12 +90,16 @@ const UserView: React.FC = () => {
         onFinish={btnSubmitClick}
       >
         <ProForm.Group>
-          <ProFormText width="md" name="name" label="签约客户名称" tooltip="最长为 24 位" placeholder="请输入名称" />
-          <ProFormText width="md" name="company" label="我方公司名称" placeholder="请输入名称" />
+          <ProFormText width="md" name="nickName" label="昵称" tooltip="最长为 24 位" placeholder="请输入名称" />
+          <ProFormText width="md" name="userName" label="用户名" placeholder="请输入名称" />
         </ProForm.Group>
         <ProForm.Group>
-          <ProFormSelect width="xs" options={[]} name="useMode" label="合同约定生效方式" />
-          <ProFormSelect width="xs" options={[]} name="unusedMode" label="合同约定失效效方式" />
+          <ProFormText width="md" name="email" label="邮箱" tooltip="最长为 24 位" placeholder="请输入名称" />
+          <ProFormText width="md" name="phoneNumber" label="手机号" placeholder="请输入名称" />
+        </ProForm.Group>
+        <ProForm.Group>
+          <ProFormSelect width="md" options={[]} name="gender" label="性别" />
+          <ProFormSelect width="md" options={[]} name="status" label="状态" />
         </ProForm.Group>
       </ModalForm>
     </PageContainer>

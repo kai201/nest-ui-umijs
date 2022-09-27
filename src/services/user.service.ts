@@ -33,8 +33,8 @@ export type CreateUser = {
   delFlag: boolean;
 };
 
-export async function list(params: any) {
-  return await request<SysUser[]>('/user/list', {
+export async function list(params = {}) {
+  return await request<R<SysUser[]>>('/user', {
     method: 'GET',
     params,
     headers: {
@@ -44,5 +44,5 @@ export async function list(params: any) {
 }
 
 export async function add(params: CreateUser) {
-  return await request('/user/add', { method: 'POST', data: params });
+  return await request<R>('/user/add', { method: 'POST', data: params });
 }
