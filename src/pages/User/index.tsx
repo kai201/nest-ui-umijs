@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PageContainer,
   ProTable,
@@ -11,6 +11,8 @@ import {
 } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+
+import * as services from '@/services/user.service';
 
 // 脚手架示例组件
 const UserView: React.FC = () => {
@@ -58,6 +60,9 @@ const UserView: React.FC = () => {
     return true;
   };
 
+  useEffect(() => {
+    services.list({});
+  });
   return (
     <PageContainer>
       <ProTable

@@ -42,6 +42,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 };
 
 export const request: RequestConfig = {
+  baseURL: 'http://localhost:3000/sys',
   errorConfig: {},
   requestInterceptors: [],
   responseInterceptors: [],
