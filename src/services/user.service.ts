@@ -33,6 +33,12 @@ export type CreateUser = {
   delFlag: boolean;
 };
 
+export type UpdateUser = CreateUser & {
+  userId: number;
+  loginIp: string;
+  loginTime: Date;
+};
+
 export async function list(params = {}) {
   return await request<R<SysUser[]>>('/user', {
     method: 'GET',
@@ -44,5 +50,13 @@ export async function list(params = {}) {
 }
 
 export async function add(params: CreateUser) {
-  return await request<R>('/user/add', { method: 'POST', data: params });
+  return await request<R>('/user/create', { method: 'POST', data: params });
+}
+
+export async function update(params: UpdateUser) {
+  return await request<R>('/user/update', { method: 'POST', data: params });
+}
+
+export async function remove(...idList: (string | number)[]) {
+  return await request<R>('/user/remove', { method: 'POST', params: { idList } });
 }
