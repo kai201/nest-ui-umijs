@@ -16,4 +16,5 @@ type R<T = any> = {
   success: boolean;
   message: string;
   data?: T | undefined;
+  total?: number;
 };

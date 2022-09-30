@@ -73,12 +73,12 @@ const UserView: React.FC = () => {
     }
   };
   const handleFetch = async (params: any, sort: any, filter: any) => {
-    const { data, success } = await services.list(params);
+    const { data, success, total } = await services.list(params);
     console.log('sort -------->', sort);
     console.log('filter ------>', filter);
     console.log('params ------>', params);
     console.log('data ------>', data);
-    return { data, success };
+    return { data, success, total };
   };
   const handleRemove = async (idList: (string | number)[]) => {
     try {
