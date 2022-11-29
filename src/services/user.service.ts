@@ -49,6 +49,10 @@ export async function list(params = {}) {
   });
 }
 
+export async function fetch(pk: number) {
+  return await request<R<SysUser>>(`/user/${pk}`, { method: 'GET' });
+}
+
 export async function add(params: CreateUser) {
   return await request<R>('/user/create', { method: 'POST', data: params });
 }

@@ -5,7 +5,7 @@ export default defineConfig({
   antd: {
     dark: false,
     compact: false,
-    import: true,
+    // import: true,
   },
   access: {},
   model: {},
@@ -14,6 +14,14 @@ export default defineConfig({
   layout: {
     title: '运管',
     pwa: false,
+  },
+  // https://umijs.org/zh-CN/plugins/plugin-locale
+  locale: {
+    // default zh-CN
+    default: 'zh-CN',
+    antd: true,
+    // default true, when it is true, will use `navigator.language` overwrite default
+    baseNavigator: true,
   },
   theme: {
     'root-entry-name': 'variable',

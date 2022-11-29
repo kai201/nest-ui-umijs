@@ -1,18 +1,31 @@
 // 运行时配置
 import { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { message } from 'antd';
 
+import Footer from '@/components/Footer';
+import RightContent from '@/components/RightContent';
+import * as services from '@/services/auth.service';
+
+const loginPath = '/auth';
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://next.umijs.org/docs/api/runtime-config#getinitialstate
 export async function getInitialState(): Promise<{
-  name: string;
-  currentUser: CurrentUser;
+  settings?: Partial<LayoutSettings>;
+  name?: string;
+  currentUser?: CurrentUser;
   loading?: boolean;
   fetchUser?: () => Promise<CurrentUser | undefined>;
 }> {
   const fetchUser = async () => {
-    return undefined;
+    let { data } = await services.currentUser();
+
+    return data;
   };
+  if (window.location.pathname !== loginPath) {
+    const currentUser = await fetchUser();
+    return { name: '@umijs/max', currentUser, fetchUser };
+  }
   return { name: '@umijs/max', currentUser: {}, fetchUser };
 }
 
@@ -31,11 +44,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     colorWeak: false,
     disableContentMargin: true,
     waterMarkProps: {
-      content: initialState?.currentUser?.email,
+      content: initialState?.currentUser?.nickName,
     },
     menu: {
       locale: false,
     },
+    rightContentRender: () => <RightContent />,
+    footerRender: () => <Footer />,
     // onPageChange: (location) => {
     //   console.log(location);
     // },
@@ -43,6 +58,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 };
 
 const codeMessage: { [key: number]: string } = {
+  0: '网络连接失败，请检查网络后重试。',
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
   202: '一个请求已经进入后台排队（异步任务）。',
@@ -69,13 +85,22 @@ export const request: RequestConfig = {
       if (e.response) message.error(codeMessage[e.response.status]);
     },
   },
-  requestInterceptors: [],
-  responseInterceptors: [
-    (response) => {
-      // 拦截响应数据，进行个性化处理
-      const { data } = response;
-      if (!(data as R).success) message.error('请求失败！');
-      return response;
+  requestInterceptors: [
+    (url, options) => {
+      const accessToken: string = localStorage.getItem('token') || '';
+
+      if (accessToken) {
+        options.headers['auth'] = `${accessToken}`;
+      }
+      return { url, options };
     },
   ],
+  // responseInterceptors: [
+  //   (response) => {
+  //     // 拦截响应数据，进行个性化处理
+  //     const { data } = response;
+  //     if (!(data as R).success) message.error('请求失败！');
+  //     return response;
+  //   },
+  // ],
 };

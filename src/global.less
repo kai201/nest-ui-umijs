@@ -1,11 +1,17 @@
-@import '~antd/es/style/variable.less';
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 .colorWeak {
   filter: invert(80%);
 }
 
 .ant-layout {
-  min-height: 85vh;
+  min-height: 100vh;
 }
 
 .ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
@@ -27,11 +33,7 @@ ol {
   list-style: none;
 }
 
-@media (max-width: @screen-xs) {
-  .ant-pro-page-container-children-content {
-    margin: 5px 0;
-  }
-
+@media (max-width: 768px) {
   .ant-table {
     width: 100%;
     overflow-x: auto;
@@ -47,12 +49,5 @@ ol {
         }
       }
     }
-  }
-}
-
-// Compatible with IE11
-@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
-  body .ant-design-pro > .ant-layout {
-    min-height: 100vh;
   }
 }

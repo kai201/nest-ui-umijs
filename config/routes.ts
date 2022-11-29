@@ -4,6 +4,11 @@ export default [
     redirect: '/console',
   },
   {
+    layout: false,
+    path: '/auth',
+    component: './Auth',
+  },
+  {
     icon: 'home',
     name: '首页',
     path: '/console',
