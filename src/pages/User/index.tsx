@@ -131,9 +131,7 @@ const UserView: React.FC = () => {
     <PageContainer>
       <ProTable
         size="small"
-        rowSelection={{
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-        }}
+        rowSelection={{ selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT] }}
         columns={columns}
         rowKey="userId"
         actionRef={tableRef}

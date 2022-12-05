@@ -25,6 +25,12 @@ export default [
         path: '/sys/user',
         component: './User',
       },
+      {
+        name: '客户管理',
+        icon: 'home',
+        path: '/sys/customer',
+        component: './Customer',
+      },
     ],
   },
 ];

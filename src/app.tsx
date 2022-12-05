@@ -51,6 +51,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     rightContentRender: () => <RightContent />,
     footerRender: () => <Footer />,
+    ...initialState?.settings,
     // onPageChange: (location) => {
     //   console.log(location);
     // },
