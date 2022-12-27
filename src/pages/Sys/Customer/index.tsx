@@ -5,18 +5,14 @@ import {
   PageContainer,
   ProTable,
   ProColumns,
-  ProForm,
-  ProFormText,
-  ModalForm,
   ActionType,
   ProFormInstance,
-  ProDescriptions,
-  ProDescriptionsItemProps,
+  BetaSchemaForm,
 } from '@ant-design/pro-components';
-import { Button, Table, Popconfirm, Drawer } from 'antd';
+import { Button, Table, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-import services, { SysCustomer, CreateSysCustomer } from '@/services/customer.service';
+import services, { SysCustomer } from '@/services/customer.service';
 
 // 脚手架示例组件
 const SysCustomerView: React.FC = () => {
@@ -27,7 +23,10 @@ const SysCustomerView: React.FC = () => {
   const [primaryKey, setPrimaryKey] = useState(0);
 
   const handleFetch = async (params: any) => {
+    if (!params.primaryKey) return;
+
     let { data, success } = await services.fetch(params.primaryKey);
+
     return { data, success };
   };
   const handleFetchList = async (params: any, sort: any, filter: any) => {
@@ -37,11 +36,14 @@ const SysCustomerView: React.FC = () => {
     formRef.current?.resetFields();
     return { data, success, total };
   };
-  const handleAdd = async (data: any) => {
-    const { success } = await services.add(data);
+  const handleSave = async (data: any) => {
+    console.log('handleSave', data);
+    // const { success } = await services.add(data);
     await tableRef.current?.reload();
-    return success;
+    // return success;
+    return true;
   };
+
   const handleRemove = async (...idList: (string | number)[]) => {
     const { success } = await services.remove(...idList);
     tableRef.current?.reload();
@@ -63,6 +65,7 @@ const SysCustomerView: React.FC = () => {
       hideInDescriptions: true,
       hideInTable: true,
       hideInSearch: true,
+      hideInForm: true,
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.customerName', defaultMessage: '客户名称' }),
@@ -160,7 +163,13 @@ const SysCustomerView: React.FC = () => {
         <a key="view" onClick={() => setPrimaryKey(customerId)}>
           {intl.formatMessage({ id: 'pages.tables.actions.view', defaultMessage: '查看' })}
         </a>,
-        <a key="editable" onClick={() => setPrimaryKey(customerId)}>
+        <a
+          key="editable"
+          onClick={() => {
+            setPrimaryKey(customerId);
+            setEditVisible(true);
+          }}
+        >
           {intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}
         </a>,
         <Popconfirm
@@ -186,57 +195,23 @@ const SysCustomerView: React.FC = () => {
         toolBarRender={actions}
         rowKey="customerId"
       />
-      <ModalForm<CreateSysCustomer>
-        title={intl.formatMessage({ id: 'pages.add.title', defaultMessage: '新增' })}
-        size="small"
-        formRef={formRef}
+
+      <BetaSchemaForm
+        layoutType={'DrawerForm'}
         open={editVisible}
         onOpenChange={setEditVisible}
-        onFinish={handleAdd}
-      >
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="customerName"
-            tooltip="最长为 24 位"
-            placeholder={intl.formatMessage({
-              id: 'pages.sys_customer.columns.customerName.placeholder',
-              defaultMessage: '外部联系人名称',
-            })}
-            rules={[
-              { required: true, message: '请输入昵称!' },
-              { type: 'string', max: 24 },
-            ]}
-            required
-          />
-          <ProFormText
-            width="md"
-            name="avatarUrl"
-            placeholder={intl.formatMessage({
-              id: 'pages.sys_customer.columns.avatarUrl.placeholder',
-              defaultMessage: '外部联系人头像',
-            })}
-            rules={[
-              { required: true, message: '请输入名称!' },
-              { type: 'string', max: 24 },
-            ]}
-          />
-        </ProForm.Group>
-      </ModalForm>
-
-      {!!primaryKey && (
-        <Drawer width={600} open={true} closable={false} onClose={() => setPrimaryKey(0)} maskClosable>
-          <ProDescriptions
-            column={2}
-            extra={false}
-            layout="horizontal"
-            title={intl.formatMessage({ id: 'pages.view.title', defaultMessage: '查看' })}
-            request={handleFetch}
-            params={{ primaryKey }}
-            columns={columns as ProDescriptionsItemProps<SysCustomer>[]}
-          />
-        </Drawer>
-      )}
+        columns={columns as any}
+        params={{ primaryKey }}
+        request={primaryKey ? handleFetch : undefined}
+        rowProps={{
+          gutter: [16, 16],
+        }}
+        colProps={{
+          span: 12,
+        }}
+        grid={true}
+        onFinish={handleSave}
+      />
     </PageContainer>
   );
 };

@@ -15,6 +15,12 @@ export default [
     component: './Home',
   },
   {
+    icon: 'home',
+    name: 'IM',
+    path: '/chat',
+    component: './IM/Chat',
+  },
+  {
     name: '系统管理',
     icon: 'home',
     path: '/sys',
@@ -23,13 +29,13 @@ export default [
         name: '用户管理',
         icon: 'home',
         path: '/sys/user',
-        component: './User',
+        component: './Sys/User',
       },
       {
         name: '客户管理',
         icon: 'home',
         path: '/sys/customer',
-        component: './Customer',
+        component: './Sys/Customer',
       },
     ],
   },
