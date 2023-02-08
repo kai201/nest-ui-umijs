@@ -8,6 +8,8 @@ import {
   ActionType,
   ProFormInstance,
   BetaSchemaForm,
+  ProFormUploadButton,
+  ProFormColumnsType,
 } from '@ant-design/pro-components';
 import { Button, Table, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -27,7 +29,9 @@ const SysCustomerView: React.FC = () => {
 
     let { data, success } = await services.fetch(params.primaryKey);
 
-    return { data, success };
+    if (success) console.log(data);
+
+    return data;
   };
   const handleFetchList = async (params: any, sort: any, filter: any) => {
     console.log(sort, filter);
@@ -36,8 +40,8 @@ const SysCustomerView: React.FC = () => {
     formRef.current?.resetFields();
     return { data, success, total };
   };
-  const handleSave = async (data: any) => {
-    console.log('handleSave', data);
+  const handleSave = async (pk: number, data: any) => {
+    console.log('handleSave', `primaryKey = ${pk}`, data);
     // const { success } = await services.add(data);
     await tableRef.current?.reload();
     // return success;
@@ -57,7 +61,7 @@ const SysCustomerView: React.FC = () => {
 
   useEffect(() => {});
 
-  const columns: ProColumns[] = [
+  const columns: (ProFormColumnsType | ProColumns)[] = [
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.customerId', defaultMessage: '客户编号' }),
       dataIndex: 'customerId',
@@ -72,12 +76,28 @@ const SysCustomerView: React.FC = () => {
       dataIndex: 'customerName',
       ellipsis: true,
       tooltip: '只读，使用form.getFieldValue获取不到值',
+      valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: intl.formatMessage({ id: 'pages.sys_customer.columns.customerName.required' }),
+          },
+        ],
+      },
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.avatarUrl', defaultMessage: '客户头像' }),
       dataIndex: 'avatarUrl',
       ellipsis: true,
-      // valueType: 'avatar',
+      valueType: 'text',
+      renderFormItem: (schema: any, config: any, form: any) => {
+        console.log('schema -> ', schema);
+        console.log('config -> ', config);
+        console.log('form -> ', form);
+        return <ProFormUploadButton action="action.do" onChange={(v) => console.log(v)} />;
+      },
+      // request: async (params, props) => Promise.reject({}),
       // readonly: true
     },
     {
@@ -210,7 +230,7 @@ const SysCustomerView: React.FC = () => {
           span: 12,
         }}
         grid={true}
-        onFinish={handleSave}
+        submitter={{ onSubmit: (x) => handleSave(primaryKey, x) }}
       />
     </PageContainer>
   );

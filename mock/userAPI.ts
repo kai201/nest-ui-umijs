@@ -4,6 +4,30 @@ const users = [
 ];
 
 export default {
+  'GET /api/sys/auth/currentUser': (req: any, res: any) => {
+    res.json({
+      success: true,
+      data: { nickName: 'ljh', avatar: 'https://cdn-gw.meb.com/UploadFiles/image/pc_logo.png' },
+    });
+  },
+  'GET /api/sys/customer/*': (req: any, res: any) => {
+    res.json({
+      success: true,
+      data: { customerId: 1, customerName: 'xxx' },
+      total: 1,
+    });
+  },
+  'GET /api/sys/customer': (req: any, res: any) => {
+    res.json({
+      success: true,
+      data: [
+        { customerId: 1, customerName: 'xxx' },
+        { customerId: 2, customerName: '2xxx' },
+      ],
+      total: 1,
+    });
+  },
+
   'GET /api/v1/queryUserList': (req: any, res: any) => {
     res.json({
       success: true,

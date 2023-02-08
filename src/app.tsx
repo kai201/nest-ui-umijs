@@ -78,7 +78,7 @@ const codeMessage: { [key: number]: string } = {
 };
 
 export const request: RequestConfig = {
-  baseURL: 'http://localhost:3000/sys',
+  baseURL: '/api/sys',
   // paramsSerializer: (params) => '',
   errorConfig: {
     errorHandler(e: any, opts) {

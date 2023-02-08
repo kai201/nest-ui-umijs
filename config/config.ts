@@ -1,6 +1,5 @@
 import { defineConfig } from '@umijs/max';
 import routes from './routes';
-
 export default defineConfig({
   antd: {
     dark: false,
@@ -28,4 +27,5 @@ export default defineConfig({
   },
   routes,
   npmClient: 'pnpm',
+  define: {},
 });
