@@ -18,6 +18,7 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import * as services from '@/services/user.service';
 
+import EditView from './_EditView';
 // 脚手架示例组件
 const UserView: React.FC = () => {
   const intl = useIntl();
@@ -28,7 +29,7 @@ const UserView: React.FC = () => {
 
   const actions = () => [
     <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setEditVisible(true)}>
-      {intl.formatMessage({ id: 'pages.btn.add', defaultMessage: '新增' })}
+      {intl.formatMessage({ id: 'pages.add.btn', defaultMessage: '新增' })}
     </Button>,
   ];
 
@@ -107,21 +108,21 @@ const UserView: React.FC = () => {
       },
     },
     {
-      title: intl.formatMessage({ id: 'pages.label.actions', defaultMessage: '操作' }),
+      title: intl.formatMessage({ id: 'pages.tables.actions', defaultMessage: '操作' }),
       valueType: 'option',
       key: 'option',
       width: 200,
       // render: (text, record, _, action) => [
       render: (_, { userId }) => [
         <a key="editable" onClick={() => {}}>
-          {intl.formatMessage({ id: 'pages.btn.actions.edit', defaultMessage: '编辑' })}
+          {intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}
         </a>,
         <Popconfirm
           key="remove"
-          title={intl.formatMessage({ id: 'pages.label.actions.confirm', defaultMessage: '是否删除？' })}
+          title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })}
           onConfirm={() => handleRemove(userId)}
         >
-          <a>{intl.formatMessage({ id: 'pages.btn.actions.remove', defaultMessage: '删除' })}</a>
+          <a>{intl.formatMessage({ id: 'pages.tables.actions.remove', defaultMessage: '删除' })}</a>
         </Popconfirm>,
       ],
     },
@@ -159,7 +160,7 @@ const UserView: React.FC = () => {
       />
 
       <ModalForm<services.CreateUser>
-        title={intl.formatMessage({ id: 'pages.title.add', defaultMessage: '新增' })}
+        title={intl.formatMessage({ id: 'pages.add.title', defaultMessage: '新增' })}
         size="small"
         formRef={formRef}
         open={editVisible}
@@ -247,6 +248,7 @@ const UserView: React.FC = () => {
           />
         </Drawer>
       )}
+      <EditView />
     </PageContainer>
   );
 };

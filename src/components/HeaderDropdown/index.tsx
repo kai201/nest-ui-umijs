@@ -2,7 +2,7 @@ import { Dropdown } from 'antd';
 import type { DropDownProps } from 'antd/es/dropdown';
 import React from 'react';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import classNames from 'classnames';
+import { join } from 'lodash';
 
 export type HeaderDropdownProps = {
   overlayClassName?: string;
@@ -19,7 +19,7 @@ const HeaderDropdown: React.FC<HeaderDropdownProps> = ({ overlayClassName: cls, 
   });
   return (
     <Dropdown
-      overlayClassName={classNames(className, cls)}
+      overlayClassName={join([className, cls], ' ')}
       getPopupContainer={(target) => target.parentElement || document.body}
       {...restProps}
     />

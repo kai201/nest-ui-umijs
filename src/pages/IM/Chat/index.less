@@ -1,0 +1,48 @@
+.conversation {
+  background-color: white;
+  min-height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  position: relative;
+  transition: all 0.3s;
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    flex: 1;
+  }
+
+  .avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .nickname {
+    font-size: 13px;
+    color: #333;
+  }
+
+  .desc {
+    font-size: 11px;
+    color: #666;
+  }
+
+  .ellipsis {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .datetime {
+    font-size: 12px;
+    color: #666;
+  }
+}

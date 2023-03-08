@@ -23,7 +23,9 @@ export default defineConfig({
     baseNavigator: true,
   },
   theme: {
+    '@primary-color': '#00B96B',
     'root-entry-name': 'variable',
+    '@border-radius': 6,
   },
   routes,
   npmClient: 'pnpm',

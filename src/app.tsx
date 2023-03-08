@@ -32,21 +32,20 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
-    navTheme: 'light',
-    // 拂晓蓝
-    primaryColor: '#1890ff',
     layout: 'mix',
     contentWidth: 'Fluid',
+    colorPrimary: '#00B96B',
     // fixedHeader: true,
     fixSiderbar: true,
     siderWidth: 208,
     splitMenus: true,
-    colorWeak: false,
     disableContentMargin: true,
+    token: {},
     waterMarkProps: {
       content: initialState?.currentUser?.nickName,
     },
     menu: {
+      type: 'group',
       locale: false,
     },
     rightContentRender: () => <RightContent />,
@@ -78,7 +77,7 @@ const codeMessage: { [key: number]: string } = {
 };
 
 export const request: RequestConfig = {
-  baseURL: '/api/sys',
+  baseURL: 'http://118.122.77.101:7000/sys',
   // paramsSerializer: (params) => '',
   errorConfig: {
     errorHandler(e: any, opts) {
