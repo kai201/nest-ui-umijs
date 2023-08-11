@@ -7,13 +7,14 @@ import {
 } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { history, FormattedMessage, SelectLang, useIntl } from '@umijs/max';
+import { history, FormattedMessage, SelectLang, useIntl, useModel } from '@umijs/max';
 import { useLocalStorageState } from 'ahooks';
 import React from 'react';
-// import { flushSync } from 'react-dom';
+import { flushSync } from 'react-dom';
 
 import Footer from '@/components/Footer';
 import * as service from '@/services/auth.service';
+import { message } from 'antd';
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -68,7 +69,7 @@ const Lang = () => {
 const Login: React.FC = () => {
   let [, setAccessToken] = useLocalStorageState<string>('token', { serializer: (v) => v, deserializer: (v) => v });
 
-  // const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState, setInitialState } = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
     return {
       display: 'flex',
@@ -80,17 +81,20 @@ const Login: React.FC = () => {
     };
   });
   const intl = useIntl();
-  // const fetchUser = async () => {
-  //   const u = await initialState?.fetchUser?.();
-  //   if (u) {
-  //     flushSync(() => {
-  //       setInitialState((s) => ({ ...s, currentUser: u }));
-  //     });
-  //   }
-  // };
+  const fetchUser = async () => {
+    const u = await initialState?.fetchUser?.();
+    if (u) {
+      flushSync(() => {
+        setInitialState((s) => ({ ...s, currentUser: u }));
+      });
+    }
+  };
   const handleSubmit = async (us: service.AuthUser) => {
-    const { data } = await service.auth(us);
-    setAccessToken(data);
+    const res = await service.auth(us);
+    if (!res.success) return message.error(res.message);
+
+    setAccessToken(res.data);
+    await fetchUser();
     const urlParams = new URL(window.location.href).searchParams;
     history.push(urlParams.get('redirect') || '/');
   };
