@@ -36,7 +36,7 @@ const SysCustomerView: React.FC = () => {
   const handleFetchList = async (params: any, sort: any, filter: any) => {
     console.log(sort, filter);
     const { data, success, total } = await services.fetchList(params);
-    await tableRef.current?.reload();
+    // await tableRef.current?.reload();
     formRef.current?.resetFields();
     return { data, success, total };
   };
@@ -59,7 +59,7 @@ const SysCustomerView: React.FC = () => {
     </Button>,
   ];
 
-  useEffect(() => {});
+  useEffect(() => {}, []);
 
   const columns: (ProFormColumnsType | ProColumns)[] = [
     {
@@ -168,7 +168,7 @@ const SysCustomerView: React.FC = () => {
   ];
 
   const tableColumns: ProColumns[] = [
-    ...take(columns, 5),
+    ...take(columns, 5) as any,
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdTime', defaultMessage: '创建时间' }),
       dataIndex: 'createdTime',

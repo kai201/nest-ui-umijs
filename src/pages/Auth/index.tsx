@@ -69,6 +69,7 @@ const Lang = () => {
 const Login: React.FC = () => {
   let [, setAccessToken] = useLocalStorageState<string>('token', { serializer: (v) => v, deserializer: (v) => v });
 
+  const [messageApi, contextHolder] = message.useMessage();
   const { initialState, setInitialState } = useModel('@@initialState');
   const containerClassName = useEmotionCss(() => {
     return {
@@ -91,7 +92,7 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (us: service.AuthUser) => {
     const res = await service.auth(us);
-    if (!res.success) return message.error(res.message);
+    if (!res.success) return messageApi.error(res.message);
 
     setAccessToken(res.data);
     await fetchUser();
@@ -104,6 +105,7 @@ const Login: React.FC = () => {
       <div className={containerClassName}>
         <Lang />
         <div style={{ flex: '1', padding: '80px 0' }}>
+          {contextHolder}
           <LoginForm<service.AuthUser>
             contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
             logo={<img alt="logo" src="https://preview.pro.ant.design/logo.svg" />}
