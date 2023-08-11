@@ -1,5 +1,5 @@
 // 运行时配置
-import { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import { RequestConfig, RunTimeLayoutConfig, history } from '@umijs/max';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { message } from 'antd';
 
@@ -18,9 +18,13 @@ export async function getInitialState(): Promise<{
   fetchUser?: () => Promise<CurrentUser | undefined>;
 }> {
   const fetchUser = async () => {
-    let { data } = await services.currentUser();
-
-    return data;
+    try {
+      let { data } = await services.currentUser();
+      return data;
+    } catch (e) {
+      console.log(e);
+      history.push(loginPath);
+    }
   };
   if (window.location.pathname !== loginPath) {
     const currentUser = await fetchUser();
@@ -77,7 +81,7 @@ const codeMessage: { [key: number]: string } = {
 };
 
 export const request: RequestConfig = {
-  baseURL: 'http://118.122.77.101:7000/sys',
+  baseURL: 'http://118.122.77.101:7000',
   // paramsSerializer: (params) => '',
   errorConfig: {
     errorHandler(e: any, opts) {

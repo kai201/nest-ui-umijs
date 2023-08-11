@@ -6,11 +6,11 @@ export type AuthUser = {
 };
 
 export async function auth(params: AuthUser) {
-  return await request<R>('/auth', { method: 'POST', data: params });
+  return await request<R>('/sys/auth', { method: 'POST', data: params });
 }
 
 export async function currentUser() {
-  return await request<R<CurrentUser>>('/auth/currentUser', {
+  return await request<R<CurrentUser>>('/sys/auth/currentUser', {
     method: 'GET',
     skipErrorHandler: true,
   });

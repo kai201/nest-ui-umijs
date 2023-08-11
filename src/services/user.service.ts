@@ -1,5 +1,7 @@
 import { request } from '@umijs/max';
 
+const API_URL = '/sys/user';
+
 export type SysUser = {
   userId: number;
   prvId: number;
@@ -40,7 +42,7 @@ export type UpdateUser = CreateUser & {
 };
 
 export async function list(params = {}) {
-  return await request<R<SysUser[]>>('/user', {
+  return await request<R<SysUser[]>>(API_URL, {
     method: 'GET',
     params,
     headers: {
@@ -49,16 +51,16 @@ export async function list(params = {}) {
   });
 }
 
-export async function fetch(pk: number) {
-  return await request<R<SysUser>>(`/user/${pk}`, { method: 'GET' });
+export async function fetch(primaryKey: number) {
+  return await request<R<SysUser>>(`${API_URL}/${primaryKey}`, { method: 'GET' });
 }
 
 export async function add(params: CreateUser) {
-  return await request<R>('/user/create', { method: 'POST', data: params });
+  return await request<R>(`${API_URL}/create`, { method: 'POST', data: params });
 }
 
 export async function update(params: UpdateUser) {
-  return await request<R>('/user/update', { method: 'POST', data: params });
+  return await request<R>(`${API_URL}/update`, { method: 'POST', data: params });
 }
 
 export async function remove(...idList: (string | number)[]) {

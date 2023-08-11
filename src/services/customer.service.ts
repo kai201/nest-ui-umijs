@@ -1,5 +1,5 @@
 import { request } from '@umijs/max';
-const API_URL = '/customer';
+const API_URL = '/sys/customer';
 
 export type SysCustomer = {
   /**
