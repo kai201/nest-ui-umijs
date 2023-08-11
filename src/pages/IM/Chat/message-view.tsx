@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useState, useRef } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 export interface Message {
   timetoken: string | number;
@@ -44,7 +44,6 @@ export const usePrevious = <T,>(value: T): T => {
 };
 
 export const useMessageList = (props: MessageListProps) => {
-    
   const [scrolledBottom, setScrolledBottom] = useState(true);
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [fetchingMessages, setFetchingMessages] = useState(false);
@@ -68,9 +67,7 @@ export const useMessageList = (props: MessageListProps) => {
     try {
       let newMessages: Message[] = [];
 
-      const allMessages = [...messages, ...newMessages].sort(
-        (a, b) => (a.timetoken as number) - (b.timetoken as number),
-      );
+      const allMessages = [...messages, ...newMessages].sort((a, b) => (a.timetoken as number) - (b.timetoken as number));
       setMessages(allMessages);
     } finally {
       setFetchingMessages(false);
@@ -89,8 +86,7 @@ export const useMessageList = (props: MessageListProps) => {
   useEffect(() => {
     if (!messages?.length || scrolledBottom) return;
     if (messages.length - prevMessages.length !== 1) return;
-    if (Number(messages.slice(-1)[0]?.timetoken) > Number(prevMessages.slice(-1)[0]?.timetoken))
-      setUnreadMessages((unread) => unread + 1);
+    if (Number(messages.slice(-1)[0]?.timetoken) > Number(prevMessages.slice(-1)[0]?.timetoken)) setUnreadMessages((unread) => unread + 1);
   }, [messages, prevMessages, scrolledBottom]);
 
   return {

@@ -1,10 +1,10 @@
-import { Avatar, List, Typography, Image } from 'antd';
 import { useModel } from '@umijs/max';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Avatar, Image, List, Typography } from 'antd';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 // import styles from './index.less';
+import 'quill/dist/quill.snow.css'; // Add css for snow theme
 import VirtualList, { ListRef } from 'rc-virtual-list';
 import { useQuill } from 'react-quilljs';
-import 'quill/dist/quill.snow.css'; // Add css for snow theme
 
 const WapView: React.FC = () => {
   const listRef = useRef<ListRef>(null);
@@ -77,17 +77,15 @@ const WapView: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(
-      `conversation => ${conversation?.conversationId} & prevConversation => ${prevConversation?.conversationId}`,
-    );
+    console.log(`conversation => ${conversation?.conversationId} & prevConversation => ${prevConversation?.conversationId}`);
     console.log(`messages.length => ${messages.length} & prevMessages.length => ${prevMessages.length}`);
 
-    if (!conversation) return; 
-    scrollToBottom(); 
+    if (!conversation) return;
+    scrollToBottom();
   }, [conversation, messages, prevMessages]);
 
   useEffect(() => {
-    console.log(window.innerHeight - 56 - 120);
+    // console.log(window.innerHeight - 56 - 120);
     setViewHeight(window.innerHeight - 56 - 120 - 100);
     window.addEventListener('resize', onResize);
     return () => {
@@ -102,11 +100,7 @@ const WapView: React.FC = () => {
         <VirtualList data={conversationList} height={viewHeight} itemKey={(n) => `${n.conversationId}_${n.memberId}`}>
           {(item) => (
             <List.Item onClick={() => setConversation(item)}>
-              <List.Item.Meta
-                avatar={<Avatar src={item.avatarUrl} style={{ height: '50px' }} />}
-                title={<>{item.conversationName}</>}
-                description={item.createdTime.toString()}
-              />
+              <List.Item.Meta avatar={<Avatar src={item.avatarUrl} style={{ height: '50px' }} />} title={<>{item.conversationName}</>} description={item.createdTime.toString()} />
             </List.Item>
           )}
         </VirtualList>
@@ -117,14 +111,7 @@ const WapView: React.FC = () => {
   const UMessageList = (
     <>
       <List>
-        <VirtualList
-          data={messages}
-          itemKey={'messageId'}
-          height={viewHeight - 200}
-          itemHeight={160}
-          ref={listRef}
-          onScroll={onScroll}
-        >
+        <VirtualList data={messages} itemKey={'messageId'} height={viewHeight - 200} itemHeight={160} ref={listRef} onScroll={onScroll}>
           {(n) => (
             <List.Item>
               {n.msgType == 1 && (

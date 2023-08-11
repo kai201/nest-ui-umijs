@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useIntl } from '@umijs/max';
+import { PlusOutlined } from '@ant-design/icons';
 import {
-  PageContainer,
-  ProTable,
-  ProColumns,
-  ProForm,
-  ProFormSelect,
-  ProFormText,
-  ModalForm,
   ActionType,
-  ProFormInstance,
+  ModalForm,
+  PageContainer,
+  ProColumns,
   ProDescriptions,
   ProDescriptionsItemProps,
+  ProForm,
+  ProFormInstance,
+  ProFormSelect,
+  ProFormText,
+  ProTable,
 } from '@ant-design/pro-components';
-import { Button, Table, Space, Popconfirm, Drawer } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { useIntl } from '@umijs/max';
+import { Button, Drawer, Popconfirm, Space, Table } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 
 import * as services from '@/services/user.service';
 
@@ -117,11 +117,7 @@ const UserView: React.FC = () => {
         <a key="editable" onClick={() => {}}>
           {intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}
         </a>,
-        <Popconfirm
-          key="remove"
-          title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })}
-          onConfirm={() => handleRemove(userId)}
-        >
+        <Popconfirm key="remove" title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })} onConfirm={() => handleRemove(userId)}>
           <a>{intl.formatMessage({ id: 'pages.tables.actions.remove', defaultMessage: '删除' })}</a>
         </Popconfirm>,
       ],

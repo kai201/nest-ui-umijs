@@ -1,6 +1,6 @@
 // 运行时配置
-import { RequestConfig, RunTimeLayoutConfig, history } from '@umijs/max';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import { RequestConfig, RunTimeLayoutConfig, history } from '@umijs/max';
 import { message } from 'antd';
 
 import Footer from '@/components/Footer';

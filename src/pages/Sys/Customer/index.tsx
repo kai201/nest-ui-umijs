@@ -1,18 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { take } from 'lodash';
-import { useIntl } from '@umijs/max';
-import {
-  PageContainer,
-  ProTable,
-  ProColumns,
-  ActionType,
-  ProFormInstance,
-  BetaSchemaForm,
-  ProFormUploadButton,
-  ProFormColumnsType,
-} from '@ant-design/pro-components';
-import { Button, Table, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { ActionType, BetaSchemaForm, PageContainer, ProColumns, ProFormColumnsType, ProFormInstance, ProFormUploadButton, ProTable } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
+import { Button, Popconfirm, Table } from 'antd';
+import { take } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
 
 import services, { SysCustomer } from '@/services/customer.service';
 
@@ -168,7 +159,7 @@ const SysCustomerView: React.FC = () => {
   ];
 
   const tableColumns: ProColumns[] = [
-    ...take(columns, 5) as any,
+    ...(take(columns, 5) as any),
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdTime', defaultMessage: '创建时间' }),
       dataIndex: 'createdTime',
@@ -192,11 +183,7 @@ const SysCustomerView: React.FC = () => {
         >
           {intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}
         </a>,
-        <Popconfirm
-          key="remove"
-          title={intl.formatMessage({ id: 'pages.tables.actions.remove.tooltip', defaultMessage: '是否删除？' })}
-          onConfirm={() => handleRemove(customerId)}
-        >
+        <Popconfirm key="remove" title={intl.formatMessage({ id: 'pages.tables.actions.remove.tooltip', defaultMessage: '是否删除？' })} onConfirm={() => handleRemove(customerId)}>
           <a>{intl.formatMessage({ id: 'pages.tables.actions.remove', defaultMessage: '删除' })}</a>
         </Popconfirm>,
       ],

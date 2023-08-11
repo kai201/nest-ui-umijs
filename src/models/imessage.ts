@@ -1,10 +1,10 @@
-import { useEffect, useCallback, useState, useRef } from 'react';
-import { io } from 'socket.io-client';
 import services, { CreateImMessage, ImMessage } from '@/services/message.service';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { io } from 'socket.io-client';
 // import conversationServices, { ImConversation } from '@/services/conversation.service';
 import conversationServices, { ImConversationWindow } from '@/services/conversation-window.service';
 import memberService, { ImMember } from '@/services/member.service';
-import { filter, find, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 
 const usePrevious = <T>(value: T): T => {
   const ref = useRef<T>(value);
@@ -55,9 +55,7 @@ export default function imessageModel() {
     if (!conversation) return;
     setFetchingMessages(true);
     try {
-      let lastMsg = messageList
-        .filter((q) => q.conversationId == conversation.conversationId)
-        .sort((a, b) => (a.sendTime as number) - (b.sendTime as number))?.[0];
+      let lastMsg = messageList.filter((q) => q.conversationId == conversation.conversationId).sort((a, b) => (a.sendTime as number) - (b.sendTime as number))?.[0];
 
       let params = {
         conversationId: conversation.conversationId,
@@ -100,9 +98,7 @@ export default function imessageModel() {
   useEffect(() => {
     if (!conversation) return;
     if (!initMessagesLoaded[conversation.conversationId]) return;
-    let curMessages = messageList
-      .filter((q) => q.conversationId == conversation.conversationId)
-      .sort((a, b) => (a.sendTime as number) - (b.sendTime as number));
+    let curMessages = messageList.filter((q) => q.conversationId == conversation.conversationId).sort((a, b) => (a.sendTime as number) - (b.sendTime as number));
     setMessages([...curMessages]);
   }, [initMessagesLoaded, conversation, messageList]);
 

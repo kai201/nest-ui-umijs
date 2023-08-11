@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { useIntl } from '@umijs/max';
 import { DrawerForm, ProForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
+import React, { useEffect, useRef } from 'react';
 
 interface EditProps {
   trigger?: React.ReactNode;
@@ -19,12 +19,7 @@ const EditView: React.FC = (props: EditProps) => {
 
   return (
     <>
-      <DrawerForm
-        formRef={formRef}
-        open={false}
-        title={intl.formatMessage({ id: 'pages.add.title', defaultMessage: '新增' })}
-        size="small"
-      >
+      <DrawerForm formRef={formRef} open={false} title={intl.formatMessage({ id: 'pages.add.title', defaultMessage: '新增' })} size="small">
         <ProForm.Group>
           <ProFormText
             width="md"
