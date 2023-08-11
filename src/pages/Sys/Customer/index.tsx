@@ -1,10 +1,9 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { useIntl } from '@umijs/max';
+import { take } from 'lodash';
+import { Button, Popconfirm, Table } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, BetaSchemaForm, PageContainer, ProColumns, ProFormColumnsType, ProFormInstance, ProFormUploadButton, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
-import { Button, Popconfirm, Table } from 'antd';
-import { take } from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
-
 import services, { SysCustomer } from '@/services/customer.service';
 
 // 脚手架示例组件
@@ -15,42 +14,6 @@ const SysCustomerView: React.FC = () => {
   const [editVisible, setEditVisible] = useState(false);
   const [primaryKey, setPrimaryKey] = useState(0);
 
-  const handleFetch = async (params: any) => {
-    if (!params.primaryKey) return;
-
-    let { data, success } = await services.fetch(params.primaryKey);
-
-    if (success) console.log(data);
-
-    return data;
-  };
-  const handleFetchList = async (params: any, sort: any, filter: any) => {
-    console.log(sort, filter);
-    const { data, success, total } = await services.fetchList(params);
-    // await tableRef.current?.reload();
-    formRef.current?.resetFields();
-    return { data, success, total };
-  };
-  const handleSave = async (pk: number, data: any) => {
-    console.log('handleSave', `primaryKey = ${pk}`, data);
-    // const { success } = await services.add(data);
-    await tableRef.current?.reload();
-    // return success;
-    return true;
-  };
-
-  const handleRemove = async (...idList: (string | number)[]) => {
-    const { success } = await services.remove(...idList);
-    tableRef.current?.reload();
-    return success;
-  };
-  const actions = () => [
-    <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setEditVisible(true)}>
-      {intl.formatMessage({ id: 'pages.add.btn', defaultMessage: '新增' })}
-    </Button>,
-  ];
-
-  useEffect(() => {}, []);
 
   const columns: (ProFormColumnsType | ProColumns)[] = [
     {
@@ -80,12 +43,11 @@ const SysCustomerView: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.avatarUrl', defaultMessage: '客户头像' }),
       dataIndex: 'avatarUrl',
+      hideInTable: true,
+      hideInSearch: true,
       ellipsis: true,
       valueType: 'text',
-      renderFormItem: (schema: any, config: any, form: any) => {
-        console.log('schema -> ', schema);
-        console.log('config -> ', config);
-        console.log('form -> ', form);
+      renderFormItem: (schema: any, config: any, form: any) => { 
         return <ProFormUploadButton action="action.do" onChange={(v) => console.log(v)} />;
       },
       // request: async (params, props) => Promise.reject({}),
@@ -145,6 +107,7 @@ const SysCustomerView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdTime', defaultMessage: '创建时间' }),
       dataIndex: 'createdTime',
       ellipsis: true,
+      valueType: 'dateTime'
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.updatedBy', defaultMessage: '更新人' }),
@@ -155,15 +118,17 @@ const SysCustomerView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.updatedTime', defaultMessage: '更新时间' }),
       dataIndex: 'updatedTime',
       ellipsis: true,
+      valueType: 'dateTime'
     },
   ];
 
-  const tableColumns: ProColumns[] = [
+  const tableColumns: ProColumns<SysCustomer>[] = [
     ...(take(columns, 5) as any),
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdTime', defaultMessage: '创建时间' }),
       dataIndex: 'createdTime',
       ellipsis: true,
+      valueType: 'date'
     },
     {
       title: intl.formatMessage({ id: 'pages.tables.actions', defaultMessage: '操作' }),
@@ -189,6 +154,46 @@ const SysCustomerView: React.FC = () => {
       ],
     },
   ];
+
+  const handleFetch = async (params: any) => {
+    if (!params.primaryKey) return;
+
+    let { data, success } = await services.fetch(params.primaryKey);
+
+    if (success) console.log(data);
+
+    return data;
+  };
+
+  const handleFetchList = async (params: any, sort: any, filter: any) => {
+    console.log(sort, filter);
+    const { data, success, total } = await services.fetchList(params);
+    // await tableRef.current?.reload();
+    formRef.current?.resetFields();
+    return { data, success, total };
+  };
+
+  const handleSave = async (pk: number, data: any) => {
+    console.log('handleSave', `primaryKey = ${pk}`, data);
+    // const { success } = await services.add(data);
+    await tableRef.current?.reload();
+    // return success;
+    return true;
+  };
+
+  const handleRemove = async (...idList: (string | number)[]) => {
+    const { success } = await services.remove(...idList);
+    tableRef.current?.reload();
+    return success;
+  };
+
+  const actions = () => [
+    <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setEditVisible(true)}>
+      {intl.formatMessage({ id: 'pages.add.btn', defaultMessage: '新增' })}
+    </Button>,
+  ];
+
+  useEffect(() => {}, []);
 
   return (
     <PageContainer>

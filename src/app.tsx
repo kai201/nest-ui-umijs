@@ -22,7 +22,6 @@ export async function getInitialState(): Promise<{
       let { data } = await services.currentUser();
       return data;
     } catch (e) {
-      console.log(e);
       history.push(loginPath);
     }
   };
