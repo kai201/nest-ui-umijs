@@ -1,37 +1,17 @@
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  ActionType,
-  ModalForm,
-  PageContainer,
-  ProColumns,
-  ProDescriptions,
-  ProDescriptionsItemProps,
-  ProForm,
-  ProFormInstance,
-  ProFormSelect,
-  ProFormText,
-  ProTable,
-} from '@ant-design/pro-components';
+import { ActionType, BetaSchemaForm, PageContainer, ProColumns, ProFormInstance, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import { Button, Drawer, Popconfirm, Space, Table } from 'antd';
+import { Button, Popconfirm, Space, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 
 import * as services from '@/services/user.service';
 
-import EditView from './_EditView';
 // 脚手架示例组件
 const UserView: React.FC = () => {
   const intl = useIntl();
   const tableRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance<services.CreateUser>>();
-  const [editVisible, setEditVisible] = useState(false);
   const [pk, setPk] = useState(0);
-
-  const actions = () => [
-    <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => setEditVisible(true)}>
-      {intl.formatMessage({ id: 'pages.add.btn', defaultMessage: '新增' })}
-    </Button>,
-  ];
 
   const handleAdd = async (data: services.CreateUser) => {
     console.log(data);
@@ -72,7 +52,6 @@ const UserView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.user.label.table_0', defaultMessage: '名称' }),
       dataIndex: 'userName',
       ellipsis: true,
-      width: 200,
       render: (_, m) => <a onClick={() => setPk(m.userId)}>{_}</a>,
     },
     {
@@ -85,15 +64,13 @@ const UserView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.user.label.table_2', defaultMessage: '邮箱' }),
       dataIndex: 'email',
       ellipsis: true,
-      width: 200,
     },
     {
       title: intl.formatMessage({ id: 'pages.user.label.table_3', defaultMessage: '创建时间' }),
-      key: 'showTime',
+      key: 'createTime',
       dataIndex: 'createTime',
       valueType: 'date',
       sorter: true,
-      width: 200,
       hideInSearch: true,
     },
     {
@@ -101,9 +78,13 @@ const UserView: React.FC = () => {
       dataIndex: 'createTime',
       valueType: 'dateRange',
       hideInTable: true,
+      hideInForm: true,
+      hideInSetting: true,
       search: {
-        transform: ([startTime, endTime]) => {
-          return { startTime, endTime };
+        transform: ([startTime, endTime],x,y) => {
+          //@ts-ignore
+          console.log(startTime);
+          return { startTime: startTime.toString(), endTime: endTime.toString() };
         },
       },
     },
@@ -124,10 +105,28 @@ const UserView: React.FC = () => {
     },
   ];
 
+  const actions = () => [
+    <BetaSchemaForm<services.CreateUser>
+      title={intl.formatMessage({ id: 'pages.add.title', defaultMessage: '新增' })}
+      layoutType={'DrawerForm'}
+      trigger={
+        <Button key="button" icon={<PlusOutlined />} type="primary">
+          {intl.formatMessage({ id: 'pages.add.btn', defaultMessage: '新增' })}
+        </Button>
+      }
+      shouldUpdate={true}
+      columns={columns as any}
+      rowProps={{ gutter: [16, 16] }}
+      grid={true}
+      onFinish={(args) => {
+        console.log(args);
+        return Promise.resolve(false);
+      }}
+    />,
+  ];
   return (
     <PageContainer>
       <ProTable
-        size="small"
         rowSelection={{ selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT] }}
         columns={columns}
         rowKey="userId"
@@ -154,97 +153,6 @@ const UserView: React.FC = () => {
           </Space>
         )}
       />
-
-      <ModalForm<services.CreateUser>
-        title={intl.formatMessage({ id: 'pages.add.title', defaultMessage: '新增' })}
-        size="small"
-        formRef={formRef}
-        open={editVisible}
-        onOpenChange={setEditVisible}
-        // request={handleSave}
-        onFinish={handleAdd}
-      >
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="nickName"
-            tooltip="最长为 24 位"
-            placeholder={intl.formatMessage({ id: 'pages.user.nickName.placeholder', defaultMessage: '昵称' })}
-            rules={[
-              { required: true, message: '请输入昵称!' },
-              { type: 'string', max: 24 },
-            ]}
-            required
-          />
-          <ProFormText
-            width="md"
-            name="userName"
-            placeholder={intl.formatMessage({ id: 'pages.user.userName.placeholder', defaultMessage: '名称' })}
-            rules={[
-              { required: true, message: '请输入名称!' },
-              { type: 'string', max: 24 },
-            ]}
-          />
-        </ProForm.Group>
-
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="email"
-            tooltip="最长为 24 位"
-            placeholder={intl.formatMessage({ id: 'pages.user.email.placeholder', defaultMessage: '请输入邮箱' })}
-            rules={[{ required: true, message: '请输入邮箱!' }, { type: 'email' }]}
-          />
-          <ProFormText
-            width="md"
-            name="phoneNumber"
-            placeholder={intl.formatMessage({
-              id: 'pages.user.phoneNumber.placeholder',
-              defaultMessage: '请输入手机号',
-            })}
-            rules={[
-              { required: true, message: '请输入手机号!' },
-              { type: 'string', len: 11 },
-            ]}
-          />
-        </ProForm.Group>
-
-        <ProForm.Group>
-          <ProFormSelect
-            width="md"
-            options={[
-              { value: 0, label: '男' },
-              { value: 1, label: '女' },
-              { value: 2, label: '未知' },
-            ]}
-            name="gender"
-            placeholder="性别"
-          />
-          <ProFormSelect
-            width="md"
-            options={[
-              { value: 0, label: '启用' },
-              { value: 1, label: '禁用' },
-            ]}
-            name="status"
-            placeholder="状态"
-          />
-        </ProForm.Group>
-      </ModalForm>
-
-      {!!pk && (
-        <Drawer width={600} open={true} closable={false} onClose={() => setPk(0)} maskClosable>
-          <ProDescriptions<services.SysUser>
-            column={2}
-            extra={false}
-            title="查看"
-            request={handleFetch}
-            params={{ pk }}
-            columns={columns as ProDescriptionsItemProps<services.SysUser>[]}
-          />
-        </Drawer>
-      )}
-      <EditView />
     </PageContainer>
   );
 };

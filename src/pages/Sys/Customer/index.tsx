@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useIntl } from '@umijs/max';
-import { take } from 'lodash';
-import { Button, Popconfirm, Table } from 'antd';
+import services, { SysCustomer } from '@/services/customer.service';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, BetaSchemaForm, PageContainer, ProColumns, ProFormColumnsType, ProFormInstance, ProFormUploadButton, ProTable } from '@ant-design/pro-components';
-import services, { SysCustomer } from '@/services/customer.service';
+import { useIntl } from '@umijs/max';
+import { Button, Popconfirm, Table } from 'antd';
+import { take } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
 
 // 脚手架示例组件
 const SysCustomerView: React.FC = () => {
@@ -13,7 +13,6 @@ const SysCustomerView: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const [editVisible, setEditVisible] = useState(false);
   const [primaryKey, setPrimaryKey] = useState(0);
-
 
   const columns: (ProFormColumnsType | ProColumns)[] = [
     {
@@ -47,7 +46,7 @@ const SysCustomerView: React.FC = () => {
       hideInSearch: true,
       ellipsis: true,
       valueType: 'text',
-      renderFormItem: (schema: any, config: any, form: any) => { 
+      renderFormItem: (schema: any, config: any, form: any) => {
         return <ProFormUploadButton action="action.do" onChange={(v) => console.log(v)} />;
       },
       // request: async (params, props) => Promise.reject({}),
@@ -107,7 +106,7 @@ const SysCustomerView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdTime', defaultMessage: '创建时间' }),
       dataIndex: 'createdTime',
       ellipsis: true,
-      valueType: 'dateTime'
+      valueType: 'dateTime',
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.updatedBy', defaultMessage: '更新人' }),
@@ -118,7 +117,7 @@ const SysCustomerView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.updatedTime', defaultMessage: '更新时间' }),
       dataIndex: 'updatedTime',
       ellipsis: true,
-      valueType: 'dateTime'
+      valueType: 'dateTime',
     },
   ];
 
@@ -128,7 +127,7 @@ const SysCustomerView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdTime', defaultMessage: '创建时间' }),
       dataIndex: 'createdTime',
       ellipsis: true,
-      valueType: 'date'
+      valueType: 'date',
     },
     {
       title: intl.formatMessage({ id: 'pages.tables.actions', defaultMessage: '操作' }),
@@ -222,7 +221,7 @@ const SysCustomerView: React.FC = () => {
           span: 12,
         }}
         grid={true}
-        submitter={{ onSubmit: (x) => handleSave(primaryKey, x) }}
+        submitter={{ onSubmit: console.log }}
       />
     </PageContainer>
   );
