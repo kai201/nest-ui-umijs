@@ -3,43 +3,83 @@ import { request } from '@umijs/max';
 const API_URL = '/sys/user';
 
 export type SysUser = {
+  /**
+   * 用户ID
+   */
   userId: number;
+  /**
+   * 上级
+   */
   prvId: number;
-  nickName: string;
+  /**
+   * 登录账号
+   */
   userName: string;
-  userLevel: number;
+  /**
+   * 用户昵称
+   */
+  nickName: string;
+  /**
+   * 用户邮箱
+   */
   email: string;
+  /**
+   * 手机号码
+   */
   phoneNumber: string;
+  /**
+   * 用户性别（0男;1女；2未知）
+   */
   gender: number;
-  avatar: string;
+  /**
+   * 头像路径
+   */
+  avatarUrl: string;
+  /**
+   * 密码
+   */
+  password: string;
+  /**
+   * 盐加密
+   */
+  salt: string;
+  /**
+   * 帐号状态（0正常、1停用）
+   */
   status: number;
-  delFlag: boolean;
-  loginIp: string;
-  loginTime: Date;
-  createBy: string;
-  createTime: Date;
-  updateBy: string;
-  updateTime: Date;
+  /**
+   * 备注
+   */
   remark: string;
+  /**
+   * 租户号
+   */
+  tenantId: number;
+  /**
+   * 乐观锁
+   */
+  revision: number;
+  /**
+   * 创建人
+   */
+  createdBy: number;
+  /**
+   * 创建时间
+   */
+  createdTime: Date;
+  /**
+   * 更新人
+   */
+  updatedBy: number;
+  /**
+   * 更新时间
+   */
+  updatedTime: Date;
 };
 
-export type CreateUser = {
-  prvId?: number;
-  nickName: string;
-  userName: string;
-  email: string;
-  phoneNumber: string;
-  gender: number;
-  avatar: string;
-  status: number;
-  delFlag: boolean;
-};
+export type CreateUser = Pick<SysUser, 'userName' | 'nickName' | 'phoneNumber' | 'avatarUrl' | 'email' | 'gender' | 'password' | 'remark'>;
 
-export type UpdateUser = CreateUser & {
-  userId: number;
-  loginIp: string;
-  loginTime: Date;
-};
+export type UpdateUser = Pick<SysUser, 'userId' | 'nickName' | 'phoneNumber' | 'avatarUrl' | 'email' | 'gender' | 'status' | 'remark'>;
 
 export async function list(params = {}) {
   return await request<R<SysUser[]>>(API_URL, {

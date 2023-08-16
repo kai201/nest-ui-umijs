@@ -20,7 +20,6 @@ const UserView: React.FC = () => {
   const formRef = useRef<ProFormInstance<services.CreateUser>>();
 
   const handleAdd = async (data: services.CreateUser) => {
-    console.log(data);
     // const val1 = await formRef.current?.validateFields();
     const { success } = await services.add(data);
     await tableRef.current?.reload();
@@ -63,7 +62,6 @@ const UserView: React.FC = () => {
   const createColumns: any[] = [
     {
       dataIndex: 'avatarUrl',
-      ellipsis: true,
       valueType: 'avatar',
       renderFormItem: (schema: any, config: any, form: any) => {
         return <UploadBtn />;
@@ -81,7 +79,6 @@ const UserView: React.FC = () => {
           },
         ],
       },
-      ellipsis: true,
       width: 'md',
       colProps: {
         xs: 24,
@@ -92,7 +89,6 @@ const UserView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.password', defaultMessage: '密码' }),
       dataIndex: 'password',
       valueType: 'password',
-      ellipsis: true,
       formItemProps: {
         rules: [
           {
@@ -105,24 +101,19 @@ const UserView: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.nickName', defaultMessage: '用户昵称' }),
       dataIndex: 'nickName',
-      ellipsis: true,
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.email', defaultMessage: '用户邮箱' }),
       dataIndex: 'email',
-      ellipsis: true,
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.phoneNumber', defaultMessage: '手机号码' }),
       dataIndex: 'phoneNumber',
-      ellipsis: true,
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.gender', defaultMessage: '用户性别（0男;1女；2未知）' }),
       dataIndex: 'gender',
-      ellipsis: true,
       valueType: 'select',
-      initialValue: 1,
       valueEnum: constants.gender as any,
       convertValue: (v: any) => `${v}`,
       transform: (value: any) => Number(value),
@@ -130,7 +121,7 @@ const UserView: React.FC = () => {
   ];
 
   const updateColumns: ProFormColumnsType<services.UpdateUser>[] = [
-    ...createColumns.filter((q) => !['userName', 'password'].includes(q.dataIndex)),
+    ...(createColumns.filter((q) => q.dataIndex && !['userName', 'password'].includes(q.dataIndex.toString())) as any),
     {
       dataIndex: 'userId',
       ellipsis: true,
@@ -223,12 +214,13 @@ const UserView: React.FC = () => {
         layoutType={'DrawerForm'}
         trigger={<a key="editable">{intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}</a>}
         shouldUpdate={false}
-        // params={{ primaryKey: row.userId }}
         columns={updateColumns}
         rowProps={{ gutter: [16, 16] }}
         colProps={{ span: 12 }}
         grid={true}
-        request={(args) => Promise.resolve(row as any)}
+        initialValues={row}
+        // params={{ primaryKey: row.userId }}
+        // request={(args) => Promise.resolve(row as any)}
         onFinish={handleSave}
       />,
       <Popconfirm key="remove" title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })} onConfirm={() => handleRemove(row.userId)}>
@@ -252,6 +244,7 @@ const UserView: React.FC = () => {
       rowProps={{ gutter: [16, 16] }}
       colProps={{ span: 12 }}
       grid={true}
+      initialValues={{ gender: 0 }}
       onFinish={handleAdd}
     />,
   ];
@@ -278,7 +271,10 @@ const UserView: React.FC = () => {
         )}
         tableAlertOptionRender={({ selectedRowKeys, onCleanSelected }) => (
           <Space size={16}>
-            <Popconfirm title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })} onConfirm={() => handleRemove(...selectedRowKeys).then((q) => onCleanSelected())}>
+            <Popconfirm
+              title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })}
+              onConfirm={() => handleRemove(...selectedRowKeys).then((q) => onCleanSelected())}
+            >
               <a>批量删除</a>
             </Popconfirm>
             <a>导出数据</a>
