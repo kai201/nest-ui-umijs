@@ -64,5 +64,5 @@ export async function update(params: UpdateUser) {
 }
 
 export async function remove(...idList: (string | number)[]) {
-  return await request<R>('/user/remove', { method: 'POST', params: { idList } });
+  return await request<R>(`${API_URL}/remove`, { method: 'POST', params: { idList } });
 }

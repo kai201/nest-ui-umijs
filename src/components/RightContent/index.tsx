@@ -11,8 +11,7 @@ const GlobalHeaderRight: React.FC = () => {
     return {
       display: 'flex',
       height: '48px',
-      marginLeft: 'auto',
-      overflow: 'hidden',
+      marginLeft: 'auto', 
       gap: 8,
     };
   });

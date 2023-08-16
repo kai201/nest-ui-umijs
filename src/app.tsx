@@ -1,11 +1,10 @@
 // 运行时配置
-import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { RequestConfig, RunTimeLayoutConfig, history } from '@umijs/max';
-import { message } from 'antd';
-
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import * as services from '@/services/auth.service';
+import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import { RequestConfig, RunTimeLayoutConfig, history } from '@umijs/max';
+import { message } from 'antd';
 
 const loginPath = '/auth';
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
@@ -80,8 +79,10 @@ const codeMessage: { [key: number]: string } = {
 };
 
 export const request: RequestConfig = {
-  baseURL: 'http://118.122.77.101:7000',
-  // paramsSerializer: (params) => '',
+  // baseURL: 'http://118.122.77.101:7000',
+
+  baseURL: 'http://127.0.0.1:3000',
+  // paramsSerializer: (params) => queryString.stringify(params),
   errorConfig: {
     errorHandler(e: any, opts) {
       if (opts?.skipErrorHandler) throw e;
