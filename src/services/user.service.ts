@@ -79,7 +79,7 @@ export type SysUser = {
 
 export type CreateUser = Pick<SysUser, 'userName' | 'nickName' | 'phoneNumber' | 'avatarUrl' | 'email' | 'gender' | 'password' | 'remark'>;
 
-export type UpdateUser = Pick<SysUser, 'userId' | 'nickName' | 'phoneNumber' | 'avatarUrl' | 'email' | 'gender' | 'status' | 'remark'>;
+export type UpdateUser = Pick<SysUser, 'userId' | 'prvId' | 'nickName' | 'phoneNumber' | 'avatarUrl' | 'email' | 'gender' | 'status' | 'remark'>;
 
 export async function list(params = {}) {
   return await request<R<SysUser[]>>(API_URL, {
@@ -93,6 +93,14 @@ export async function list(params = {}) {
 
 export async function fetch(primaryKey: number) {
   return await request<R<SysUser>>(`${API_URL}/${primaryKey}`, { method: 'GET' });
+}
+
+export async function nameOf(keyword: string) {
+  return await request<R<SysUser[]>>(`${API_URL}/nameof`, { method: 'GET', params: { name: keyword } });
+}
+
+export async function keyof(...idList: (string | number)[]) {
+  return await request<R<SysUser[]>>(`${API_URL}/keyof`, { method: 'GET', params: { idList } });
 }
 
 export async function add(params: CreateUser) {

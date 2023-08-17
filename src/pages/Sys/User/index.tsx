@@ -46,8 +46,10 @@ const UserView: React.FC = () => {
     console.log('sort -------->', sort);
     console.log('filter ------>', filter);
     console.log('params ------>', params);
+    services.keyof(1, 2, 3).then(({ data }) => {
+      console.log(data?.map(q=>q.userName))
+    });
     const { data, success, total } = await services.list(params);
-    console.log('data ------>', data);
     return { data, success, total };
   };
 
@@ -57,7 +59,8 @@ const UserView: React.FC = () => {
     return success;
   };
 
-  useEffect(() => {});
+  useEffect(() => {
+  });
 
   const createColumns: any[] = [
     {
@@ -130,6 +133,23 @@ const UserView: React.FC = () => {
       colProps: {
         style: { display: 'none' },
       },
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.sys_user.columns.prvId', defaultMessage: '上级' }),
+      dataIndex: 'prvId',
+      valueType: 'select',
+      request: async (params, props) => {
+        // console.log(props);
+        if (!params.keyWords) return [];
+        const res = await services.nameOf(params.keyWords);
+        return res.data?.map((q) => {
+          return { value: q.userId, label: q.userName };
+        });
+      },
+      fieldProps: {
+        showSearch: true,
+      },
+      transform: (value: any) => value && Number(value),
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.status', defaultMessage: '帐号状态（0正常、1停用）' }),
