@@ -1,4 +1,4 @@
-import UploadBtn from '@/components/UploadButton';
+import UploadButton from '@/components/UploadButton';
 import * as constants from '@/constants';
 import * as services from '@/services/user.service';
 import { PlusOutlined } from '@ant-design/icons';
@@ -6,18 +6,39 @@ import { ActionType, BetaSchemaForm, PageContainer, ProColumns, ProFormColumnsTy
 import { useIntl } from '@umijs/max';
 import { Button, Popconfirm, Space, Table } from 'antd';
 import dayjs from 'dayjs';
-import React, { useEffect, useRef } from 'react';
+import { difference, keys, uniq } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
 
-const statusEnum = [
-  { text: '启用', value: 0, status: 'Success' },
-  { text: '停用', value: 1, status: 'Error' },
-];
+const statusEnum = {
+  '0': { text: '启用', status: 'Success' },
+  '1': { text: '停用', status: 'Error' },
+};
 
 // 脚手架示例组件
 const UserView: React.FC = () => {
   const intl = useIntl();
   const tableRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance<services.CreateUser>>();
+  const [prvEnum, setPrvEnum] = useState<any>({ '0': { text: '-' } });
+
+  const handleFetchList = async (params: any, sort: any, filter: any) => {
+    console.log('sort -------->', sort);
+    console.log('filter ------>', filter);
+    console.log('params ------>', params);
+
+    const { data, success, total } = await services.list(params);
+    if (success) {
+      let idList = data!.map((q) => q.prvId.toString());
+      idList = difference(uniq(idList), keys(prvEnum));
+      if (idList.length)
+        services.keyof(...idList).then((res) => {
+          let enums: Record<string, any> = {};
+          res.data!.map((q) => (enums[q.userId] = { text: q.userName }));
+          setPrvEnum({ ...prvEnum, ...enums });
+        });
+    }
+    return { data, success, total };
+  };
 
   const handleAdd = async (data: services.CreateUser) => {
     // const val1 = await formRef.current?.validateFields();
@@ -34,41 +55,17 @@ const UserView: React.FC = () => {
     return success;
   };
 
-  const handleFetch = async (params: any) => {
-    console.log('handleFetch');
-
-    let { data, success } = await services.fetch(params.pk);
-
-    return { data, success };
-  };
-
-  const handleFetchList = async (params: any, sort: any, filter: any) => {
-    console.log('sort -------->', sort);
-    console.log('filter ------>', filter);
-    console.log('params ------>', params);
-    services.keyof(1, 2, 3).then(({ data }) => {
-      console.log(data?.map(q=>q.userName))
-    });
-    const { data, success, total } = await services.list(params);
-    return { data, success, total };
-  };
-
   const handleRemove = async (...idList: (string | number)[]) => {
     const { success } = await services.remove(...idList);
     tableRef.current?.reload();
     return success;
   };
 
-  useEffect(() => {
-  });
-
   const createColumns: any[] = [
     {
       dataIndex: 'avatarUrl',
       valueType: 'avatar',
-      renderFormItem: (schema: any, config: any, form: any) => {
-        return <UploadBtn />;
-      },
+      renderFormItem: () => <UploadButton />,
       colProps: {},
     },
     {
@@ -138,18 +135,20 @@ const UserView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.prvId', defaultMessage: '上级' }),
       dataIndex: 'prvId',
       valueType: 'select',
+      valueEnum: () => prvEnum,
       request: async (params, props) => {
-        // console.log(props);
-        if (!params.keyWords) return [];
+        // await new Promise((q) => setTimeout(q, 1000));
+        if (!params.keyWords) return keys(prvEnum).map((q) => ({ label: prvEnum[q].text, value: q }));
         const res = await services.nameOf(params.keyWords);
-        return res.data?.map((q) => {
-          return { value: q.userId, label: q.userName };
-        });
+        let enums = res.data!.map((q) => ({ label: q.userName, value: q.userId + '' }));
+        return enums;
       },
+      debounceTime: 1000,
       fieldProps: {
         showSearch: true,
       },
-      transform: (value: any) => value && Number(value),
+      convertValue: (v: any) => `${v}`,
+      // transform: (value: any) => value && Number(value),
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.status', defaultMessage: '帐号状态（0正常、1停用）' }),
@@ -180,6 +179,21 @@ const UserView: React.FC = () => {
       ellipsis: true,
     },
     {
+      title: intl.formatMessage({ id: 'pages.sys_user.columns.prvId', defaultMessage: '上级' }),
+      dataIndex: 'prvId',
+      valueEnum: prvEnum,
+      debounceTime: 500,
+      request: async (params, props) => {
+        if (!params.keyWords && !props.text) return [];
+        const res = params.keyWords ? await services.nameOf(params.keyWords) : await services.keyof(props.text);
+        let enums = res.data!.map((q) => ({ label: q.userName, value: q.userId }));
+        return enums;
+      },
+      fieldProps: {
+        showSearch: true,
+      },
+    },
+    {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.gender', defaultMessage: '用户性别（0男;1女；2未知）' }),
       dataIndex: 'gender',
       ellipsis: true,
@@ -189,7 +203,7 @@ const UserView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.status', defaultMessage: '帐号状态（0正常、1停用）' }),
       dataIndex: 'status',
       ellipsis: true,
-      valueEnum: statusEnum,
+      valueEnum: statusEnum as any,
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.updatedTime', defaultMessage: '更新时间' }),
@@ -202,6 +216,7 @@ const UserView: React.FC = () => {
       dataIndex: 'createdTime',
       ellipsis: true,
       hideInSearch: true,
+      sorter: true,
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.createdTime', defaultMessage: '创建时间' }),
@@ -212,7 +227,7 @@ const UserView: React.FC = () => {
       hideInSetting: true,
       search: {
         transform: ([startTime, endTime]) => {
-          return { startTime: startTime && dayjs(startTime).format(), endTime: endTime && dayjs(endTime).add(1, 'day').format() };
+          return { startTime: startTime && dayjs(startTime).format('YYYY-MM-DD'), endTime: endTime && dayjs(endTime).add(1, 'day').format('YYYY-MM-DD') };
         },
       },
     },
@@ -233,14 +248,12 @@ const UserView: React.FC = () => {
         title={intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}
         layoutType={'DrawerForm'}
         trigger={<a key="editable">{intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}</a>}
-        shouldUpdate={false}
+        shouldUpdate={true}
         columns={updateColumns}
         rowProps={{ gutter: [16, 16] }}
         colProps={{ span: 12 }}
         grid={true}
         initialValues={row}
-        // params={{ primaryKey: row.userId }}
-        // request={(args) => Promise.resolve(row as any)}
         onFinish={handleSave}
       />,
       <Popconfirm key="remove" title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })} onConfirm={() => handleRemove(row.userId)}>
@@ -268,6 +281,8 @@ const UserView: React.FC = () => {
       onFinish={handleAdd}
     />,
   ];
+
+  useEffect(() => {});
 
   return (
     <PageContainer>

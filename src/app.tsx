@@ -79,8 +79,8 @@ const codeMessage: { [key: number]: string } = {
 };
 
 export const request: RequestConfig = {
-  baseURL: 'http://118.122.77.101:7000',
-  // baseURL: 'http://127.0.0.1:3000',
+  // baseURL: 'http://118.122.77.101:7000',
+  baseURL: 'http://127.0.0.1:3000',
   // paramsSerializer: (params) => queryString.stringify(params),
   errorConfig: {
     errorHandler(e: any, opts) {
