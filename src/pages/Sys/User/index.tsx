@@ -114,9 +114,8 @@ const UserView: React.FC = () => {
       title: intl.formatMessage({ id: 'pages.sys_user.columns.gender', defaultMessage: '用户性别（0男;1女；2未知）' }),
       dataIndex: 'gender',
       valueType: 'select',
-      valueEnum: constants.gender as any,
+      valueEnum: constants.gender,
       convertValue: (v: any) => `${v}`,
-      transform: (value: any) => Number(value),
     },
   ];
 

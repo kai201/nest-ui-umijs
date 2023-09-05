@@ -37,6 +37,12 @@ export default [
         path: '/sys/customer',
         component: './Sys/Customer',
       },
+      {
+        name: '任务管理',
+        icon: 'home',
+        path: '/sys/task',
+        component: './Sys/Task',
+      },
     ],
   },
 ];
