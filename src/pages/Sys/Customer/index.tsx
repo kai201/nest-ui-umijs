@@ -12,6 +12,7 @@ const SysCustomerView: React.FC = () => {
   const intl = useIntl();
   const tableRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance<CreateSysCustomer>>();
+  const viewContainerRef = useRef(null);
   const [editVisible, setEditVisible] = useState(false);
   const [primaryKey, setPrimaryKey] = useState(0);
 
@@ -56,113 +57,6 @@ const SysCustomerView: React.FC = () => {
 
   useEffect(() => {}, []);
 
-  const columns: (ProFormColumnsType | ProColumns)[] = [
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.customerId', defaultMessage: '客户编号' }),
-      dataIndex: 'customerId',
-      ellipsis: true,
-      hideInDescriptions: true,
-      hideInTable: true,
-      hideInSearch: true,
-      hideInForm: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.customerName', defaultMessage: '客户名称' }),
-      dataIndex: 'customerName',
-      ellipsis: true,
-      tooltip: '只读，使用form.getFieldValue获取不到值',
-      valueType: 'text',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: intl.formatMessage({ id: 'pages.sys_customer.columns.customerName.required' }),
-          },
-        ],
-      },
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.avatarUrl', defaultMessage: '客户头像' }),
-      dataIndex: 'avatarUrl',
-      hideInTable: true,
-      hideInSearch: true,
-      ellipsis: true,
-      valueType: 'text',
-      renderFormItem: (schema: any, config: any, form: any) => {
-        return <ProFormUploadButton action="action.do" onChange={(v) => console.log(v)} />;
-      },
-      // request: async (params, props) => Promise.reject({}),
-      // readonly: true
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.gender', defaultMessage: '客户性别' }),
-      dataIndex: 'gender',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.corpName', defaultMessage: '企业名称' }),
-      dataIndex: 'corpName',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.position', defaultMessage: '客户职位' }),
-      dataIndex: 'position',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.unionId', defaultMessage: '微信标识' }),
-      dataIndex: 'unionId',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.mobilePhone', defaultMessage: '手机号' }),
-      dataIndex: 'mobilePhone',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.email', defaultMessage: '邮箱' }),
-      dataIndex: 'email',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.qq', defaultMessage: 'QQ号' }),
-      dataIndex: 'qq',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.tenantId', defaultMessage: '租户号' }),
-      dataIndex: 'tenantId',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.revision', defaultMessage: '乐观锁' }),
-      dataIndex: 'revision',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdBy', defaultMessage: '创建人' }),
-      dataIndex: 'createdBy',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.createdTime', defaultMessage: '创建时间' }),
-      dataIndex: 'createdTime',
-      ellipsis: true,
-      valueType: 'dateTime',
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.updatedBy', defaultMessage: '更新人' }),
-      dataIndex: 'updatedBy',
-      ellipsis: true,
-    },
-    {
-      title: intl.formatMessage({ id: 'pages.sys_customer.columns.updatedTime', defaultMessage: '更新时间' }),
-      dataIndex: 'updatedTime',
-      ellipsis: true,
-      valueType: 'dateTime',
-    },
-  ];
-
   const createColumns: ProFormColumnsType[] = [
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.customerName', defaultMessage: '客户名称' }),
@@ -194,12 +88,12 @@ const SysCustomerView: React.FC = () => {
       dataIndex: 'position',
     },
   ];
-  
+
   const updateColumns: ProFormColumnsType[] = [
     ...createColumns,
     {
       title: intl.formatMessage({ id: 'pages.sys_customer.columns.customerId', defaultMessage: '客户编号' }),
-      dataIndex: 'customerId', 
+      dataIndex: 'customerId',
       colProps: {
         style: { display: 'none' },
       },
@@ -255,6 +149,7 @@ const SysCustomerView: React.FC = () => {
         key={row.customerId}
         title={intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}
         layoutType={'DrawerForm'}
+        // drawerProps={{ rootStyle: { position: 'absolute' }, getContainer: () => viewContainerRef.current! }}
         trigger={<a key="editable">{intl.formatMessage({ id: 'pages.tables.actions.edit', defaultMessage: '编辑' })}</a>}
         shouldUpdate={true}
         columns={updateColumns}
@@ -264,7 +159,7 @@ const SysCustomerView: React.FC = () => {
         initialValues={row}
         onFinish={handleSave}
       />,
-      <Popconfirm key="remove" title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })} onConfirm={() => handleRemove(row.userId)}>
+      <Popconfirm key="remove" title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })} onConfirm={() => handleRemove(row.customerId)}>
         <a>{intl.formatMessage({ id: 'pages.tables.actions.remove', defaultMessage: '删除' })}</a>
       </Popconfirm>,
     ];
@@ -275,6 +170,7 @@ const SysCustomerView: React.FC = () => {
       title={intl.formatMessage({ id: 'pages.add.title', defaultMessage: '新增' })}
       formRef={formRef}
       layoutType={'DrawerForm'}
+      // drawerProps={{ rootStyle: { position: 'absolute' },getContainer: () => viewContainerRef.current! }}
       trigger={
         <Button key="button" icon={<PlusOutlined />} type="primary">
           {intl.formatMessage({ id: 'pages.add.btn', defaultMessage: '新增' })}
@@ -290,38 +186,40 @@ const SysCustomerView: React.FC = () => {
     />,
   ];
   return (
-    <PageContainer>
-      <ProTable<SysCustomer>
-        rowKey="customerId"
-        rowSelection={{ selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT] }}
-        columns={tableColumns}
-        actionRef={tableRef}
-        form={{ syncToUrl: true, syncToInitialValues: false }}
-        request={handleFetchList}
-        toolBarRender={actions}
-        tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
-          <Space size={24}>
-            <span>
-              已选 {selectedRowKeys.length} 项
-              <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
-                取消选择
-              </a>
-            </span>
-          </Space>
-        )}
-        tableAlertOptionRender={({ selectedRowKeys, onCleanSelected }) => (
-          <Space size={16}>
-            <Popconfirm
-              title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })}
-              onConfirm={() => handleRemove(...selectedRowKeys).then((q) => onCleanSelected())}
-            >
-              <a>批量删除</a>
-            </Popconfirm>
-            <a>导出数据</a>
-          </Space>
-        )}
-      />
-    </PageContainer>
+    <div style={{ position: 'relative', display: 'block', boxSizing: 'border-box' }} ref={viewContainerRef}>
+      <PageContainer>
+        <ProTable<SysCustomer>
+          rowKey="customerId"
+          rowSelection={{ selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT] }}
+          columns={tableColumns}
+          actionRef={tableRef}
+          form={{ syncToUrl: true, syncToInitialValues: false }}
+          request={handleFetchList}
+          toolBarRender={actions}
+          tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
+            <Space size={24}>
+              <span>
+                已选 {selectedRowKeys.length} 项
+                <a style={{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+                  取消选择
+                </a>
+              </span>
+            </Space>
+          )}
+          tableAlertOptionRender={({ selectedRowKeys, onCleanSelected }) => (
+            <Space size={16}>
+              <Popconfirm
+                title={intl.formatMessage({ id: 'pages.tables.actions.confirm', defaultMessage: '是否删除？' })}
+                onConfirm={() => handleRemove(...selectedRowKeys).then((q) => onCleanSelected())}
+              >
+                <a>批量删除</a>
+              </Popconfirm>
+              <a>导出数据</a>
+            </Space>
+          )}
+        />
+      </PageContainer>
+    </div>
   );
 };
 export default SysCustomerView;

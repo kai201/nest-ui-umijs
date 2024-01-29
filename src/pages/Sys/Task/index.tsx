@@ -18,8 +18,8 @@ const SysTaskView: React.FC = () => {
 
   const createColumns: ProFormColumnsType<CreateSysTask>[] = [
     {
-      title: intl.formatMessage({ id: 'pages.sys_task.columns.expression', defaultMessage: '表达式' }),
-      dataIndex: 'expression',
+      title: intl.formatMessage({ id: 'pages.sys_task.columns.pattern', defaultMessage: '表达式' }),
+      dataIndex: 'pattern',
       formItemProps: {
         rules: [
           { required: true, message: '此项为必填项' },
@@ -54,8 +54,8 @@ const SysTaskView: React.FC = () => {
       },
     },
     {
-      title: intl.formatMessage({ id: 'pages.sys_task.columns.expression', defaultMessage: '表达式' }),
-      dataIndex: 'expression',
+      title: intl.formatMessage({ id: 'pages.sys_task.columns.pattern', defaultMessage: '表达式' }),
+      dataIndex: 'pattern',
     },
     {
       title: intl.formatMessage({ id: 'pages.sys_task.columns.status', defaultMessage: '状态' }),
@@ -81,8 +81,8 @@ const SysTaskView: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: intl.formatMessage({ id: 'pages.sys_task.columns.expression', defaultMessage: '表达式' }),
-      dataIndex: 'expression',
+      title: intl.formatMessage({ id: 'pages.sys_task.columns.pattern', defaultMessage: '表达式' }),
+      dataIndex: 'pattern',
       ellipsis: true,
       hideInSearch: true,
     },

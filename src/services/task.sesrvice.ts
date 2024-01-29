@@ -9,7 +9,7 @@ export type SysTask = {
   /**
    * 表达式
    */
-  expression: string;
+  pattern: string;
   /**
    * 执行时间
    */
@@ -50,7 +50,7 @@ export type SysTask = {
 
 export type CreateSysTask = {};
 
-export type UpdateSysTask = Pick<SysTask, 'taskId' | 'expression' | 'runScript' | 'status'>;
+export type UpdateSysTask = Pick<SysTask, 'taskId' | 'pattern' | 'runScript' | 'status'>;
 
 export default {
   async fetch(primaryKey: number) {
