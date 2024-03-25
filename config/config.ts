@@ -31,8 +31,11 @@ export default defineConfig({
   chainWebpack(memo, { env, webpack }) {
     // memo.plugin('extract-css').tap(() => [{ filename: 'static/[name].[hash].css', chunkFilename: 'static/[name].[hash].css', ignoreOrder: true }]);
     // console.log(Object.keys(memo.plugins));
-    memo.output.filename('static/[name].[hash].js').chunkFilename('static/[name].[hash].js').end();
+    // memo.output.filename('static/[name].[hash].js').chunkFilename('static/[name].[hash].js').end();
   },
+  // extraPostCSSPlugins: [require('tailwindcss')({ config: './tailwind.config.js' })],
+
+  extraPostCSSPlugins: [require('tailwindcss')],
   npmClient: 'pnpm',
   define: {},
 });

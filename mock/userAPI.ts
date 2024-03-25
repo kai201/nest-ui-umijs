@@ -4,6 +4,12 @@ const users = [
 ];
 
 export default {
+  'POST /api/sys/auth': (req: any, res: any) => {
+    res.json({
+      success: true,
+      data: 'xxxxxxx',
+    });
+  },
   'GET /api/sys/auth/currentUser': (req: any, res: any) => {
     res.json({
       success: true,

@@ -34,7 +34,8 @@ export default function imessageModel() {
   // const prevConversationId = usePrevious(conversationId);
 
   const [socket] = useState(
-    io('ws://118.122.77.101:7000', {
+    io('ws://127.0.0.1:3000', {
+      // path: '/',
       autoConnect: false,
       auth: (done) => {
         done({ token: localStorage.getItem('token') || '' });

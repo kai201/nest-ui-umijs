@@ -98,7 +98,7 @@ const Login: React.FC = () => {
     <>
       <div className={containerClassName}>
         <Lang />
-        <div style={{ flex: '1', padding: '80px 0' }}>
+        <div className="flex py-20">
           {contextHolder}
           <LoginForm<service.AuthUser>
             contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
